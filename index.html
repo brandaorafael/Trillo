@@ -9,7 +9,7 @@
 	<body ng-app="app" valign="top" ng-controller="ListaController as lista">
 
 		<ul class="lista ng-scope ui-sortable" ng-repeat="list in lista.listas">
-			<li class="nome-lista" contenteditable="false" ng-click="lista.removeLista(list.id)">{{list.nome}}</li>
+			<li class="nome-lista" contenteditable="false"><input class="div-nome">{{list.nome}}</div><div class="div-icon"  ng-click="lista.removeLista(list.id)"></div></li>
 			
 			<li class="card" ng-repeat="card in list.cards" id="{{card.id}}">{{card.nome}}</li>
 

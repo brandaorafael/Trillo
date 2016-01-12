@@ -16,6 +16,8 @@ ul {
 li {
 	margin: 0px;
 	padding: 10px;
+    position: relative;
+    display: block;
 }
 
 .lista{
@@ -24,8 +26,25 @@ li {
 	border-radius: 3px;
 }
 
-.card {
+.nome-lista {
+    height: 20px;
+}
+
+.div-icon{
+    position: absolute;
 	display: inline-block;
+	width: 10px;
+	height: 15px;
+	right: 10px;
+	content: url(x_icon.png);
+}
+
+.div-nome{
+	display: inline-block;
+    position: absolute;
+}
+
+.card {
 	width: 240px;
 	margin: 5px;
 	background: #FFFFFF;
@@ -46,13 +65,14 @@ li {
 	background: #949595;
 	color: black;
 	text-decoration: underline;
+	border-radius: 3px;	
 }
 
 .add-lista {
 	background: #006BA9;
 	border-radius: 3px;	
 	color: #A9CDE2;
-	margin-top: 2px;
+	margin-top: 5px;
 }
 
 .add-lista:hover {
