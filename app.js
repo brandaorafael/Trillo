@@ -1,5 +1,26 @@
 //var lostas = [{"nome": "testando1", "cards": [{"nome": "Card1", "id": "l1c1"}, {"nome": "Card2", "id": "l1c2"}]}, {"nome": "testando2", "cards": [{"nome": "Card1", "id": "l2c1"}, {"nome": "Card2", "id": "l2c2"}, {"nome": "Card3", "id": "l2c3"}, {"nome": "Card4", "id": "l2c4"}]}];
-var lostas = [{"nome": "testando1", "cards": [{"nome": "Card1", "id": "1"}, {"nome": "Card2", "id": "2"}]}, {"nome": "testando2", "cards": [{"nome": "Card1", "id": "1"}, {"nome": "Card2", "id": "2"}, {"nome": "Card3", "id": "3"}, {"nome": "Card4", "id": "4"}]}];
+var lostas = [
+	{"nome": "testando1",
+	"cards": [
+			{"nome": "Card1",
+			"id": "1"},
+			{"nome": "Card2",
+			"id": "2"}
+		]
+	},
+	{"nome": "testando2",
+	"cards": [
+			{"nome": "Card1",
+			"id": "1"},
+			{"nome": "Card2",
+			"id": "2"}, 
+			{"nome": "Card3", 
+			"id": "3"}, 
+			{"nome": "Card4", 
+			"id": "4"}
+		]
+	}
+];
 
 (function(){
 	var app = angular.module("app", []);
@@ -18,15 +39,33 @@ var lostas = [{"nome": "testando1", "cards": [{"nome": "Card1", "id": "1"}, {"no
 	app.controller("ListaController",["$http", function($http){
 		var listaCtrl = this;
 
-		listaCtrl.listas = listas;
+		listaCtrl.novaLista = {"nome": "Nova Lista"}; 
 
-		/*$http.get("http://localhost:65531/listas").success(function(data){
+		//listaCtrl.listas = listas;
+
+		$http.get("http://localhost:60684/listas").success(function(data){
 			listaCtrl.listas = data;
-		});*/
+		});
 
 		listaCtrl.addLista = function(){
-			listaCtrl.listas.push({"nome": "Nova Lista", "cards": []});
+			//listaCtrl.listas.push({"nome": "Nova Lista", "cards": []});
+			
+			$http.post("http://localhost:60684/listas", listaCtrl.novaLista).success(function(data){
+				listaCtrl.listas.push(data[0]);
+			}).error(function(){
+				alert("Deu Erro");
+			});
 		}
+
+		listaCtrl.removeLista = function(id){
+			
+			$http.delete("http://localhost:60684/listas", id).success(function(data){
+				listaCtrl.listas.push(data[0]);
+			}).error(function(){
+				alert("Deu Erro");
+			});
+		}
+
 		listaCtrl.addCard = function(listaAtual){
 			listaAtual.cards.push({"nome": "Novo Card", "id": listaAtual.cards.length + 1});
 		}
