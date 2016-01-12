@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Trillo</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta charset="UTF-8">
+	</head>
+	
+	<body ng-app="app" valign="top" ng-controller="ListaController as lista">
+
+		<ul class="lista ng-scope ui-sortable" ng-repeat="list in lista.listas">
+			<li class="nome-lista" contenteditable="true">{{list.nome}}</li>
+			
+			<li class="card" ng-repeat="card in list.cards" id="{{card.id}}">{{card.nome}}</li>
+
+			<li class="add-card" ng-click="lista.addCard(list)">Adicionar um cartão...</li>
+		</ul>
+
+		<ul class="add-lista">
+			<li ng-click="lista.addLista()">Adicionar uma lista...</li>
+		</ul>
+
+	</body>
+
+	<script src="jquery-1.11.3.min.js"></script>
+	<script src="jquery-ui.min.js"></script>
+	<script src="angular.min.js"></script>
+	<script src="app.js"></script>
+
+</html>
+
+
+

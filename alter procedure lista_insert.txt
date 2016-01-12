@@ -1,0 +1,73 @@
+alter procedure lista_insert
+@nome nvarchar(50)
+as begin
+insert into lista(nome) values (@nome)
+select SCOPE_IDENTITY() as id_lista
+end
+
+go
+
+alter procedure lista_update
+@id int,
+@nome nvarchar(50)
+as begin
+update lista set nome = @nome where id = @id
+end	
+
+go
+
+alter procedure lista_delete
+@id int
+as begin
+update lista set suspenso = 1 where id = @id
+end
+
+go
+
+alter procedure lista_select
+@id_lista int = null,
+@nome nvarchar(50) = null
+as begin
+select id, nome 
+from lista 
+where suspenso = 0 and (id = @id_lista or @id_lista is null)
+and (nome like '%'+ @nome + '%' or @nome is null)
+end
+
+go
+
+alter procedure card_select
+@id_card int = null,
+@nome nvarchar(50) = null
+as begin
+select id, nome 
+from card 
+where suspenso = 0 and (id = @id_card or @id_card is null)
+and (nome like '%'+ @nome + '%' or @nome is null)
+end
+
+go 
+
+create procedure card_insert
+@nome nvarchar(50)
+as begin
+insert into card(nome) values (@nome)
+select SCOPE_IDENTITY() as id_card
+end
+
+go
+
+create procedure card_update
+@id int,
+@nome nvarchar(50)
+as begin
+update card set nome = @nome where id = @id
+end	
+
+go
+
+create procedure card_delete
+@id int
+as begin
+update card set suspenso = 1 where id = @id
+end
