@@ -35,15 +35,33 @@ public class ListasController : PloomesCRM
     [ActionName("")]
     public object Post(JObject lista)
     {
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Post(lista), ControllerContext));
+        }
+        catch (Exception)
+        {
+            Dictionary<string, object> erro = new Dictionary<string, object>();
+            erro.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+        }
+    }
+
+    [ActionName("")]
+    public object Delete(int id)
+    {
+
+        Dictionary<string, object> retorno = new Dictionary<string, object>();
         //try
         //{
-            return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Post(lista), ControllerContext));
+            service.Delete(id);
+            retorno.Add("success", true);
+            return Request.CreateResponse(HttpStatusCode.OK, retorno);
         //}
         //catch (Exception)
         //{
-        //    Dictionary<string, object> erro = new Dictionary<string, object>();
-        //    erro.Add("success", false);
-        //    return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+        //    retorno.Add("success", false);
+        //    return Request.CreateResponse(HttpStatusCode.InternalServerError, retorno);
         //}
     }
 

@@ -41,6 +41,21 @@ public class ListasService : ApiService
         return id.Count > 0 && id[0]["id_lista"] != DBNull.Value ? Get(int.Parse(id[0]["id_lista"].ToString()), null, true) : null;
     }
 
+    public void Delete(int id)
+    {
+        Dictionary<string, object> parametros = new Dictionary<string, object>();
+        parametros.Add("id", id);
+
+        List<Dictionary<string, object>> resultado = DBQuery("Lista_Delete", parametros, CommandType.StoredProcedure);
+
+        if (resultado.Count == 0 || Convert.ToInt32(resultado[0]["Rows"]) == 0)
+        {
+            throw new Exception("Não excluiu");
+        }
+    }
+
+     
+
 
 
     /* public List<Dictionary<string, object>> Post(string uk, string apvk, JObject cliente)

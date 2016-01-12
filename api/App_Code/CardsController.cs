@@ -32,5 +32,19 @@ public class CardsController: PloomesCRM
             return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
         }
     }
-    
+
+    //[ActionName("")]
+    //public object Post(JObject card)
+    //{
+    //    try
+    //    {
+    //        return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Get(id, nome, id_lista), ControllerContext));
+    //    }
+    //    catch (Exception)
+    //    {
+    //        Dictionary<string, object> erro = new Dictionary<string, object>();
+    //        erro.Add("success", false);
+    //        return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+    //    }
+    //}
 }

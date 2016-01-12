@@ -59,8 +59,12 @@ var lostas = [
 
 		listaCtrl.removeLista = function(id){
 			
-			$http.delete("http://localhost:60684/listas", id).success(function(data){
-				listaCtrl.listas.push(data[0]);
+			$http.delete("http://localhost:60684/listas/"+id).success(function(data){
+
+				var index = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(id);
+
+				listaCtrl.listas.splice(index, 1);
+				
 			}).error(function(){
 				alert("Deu Erro");
 			});
