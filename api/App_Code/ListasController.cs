@@ -27,7 +27,7 @@ public class ListasController : PloomesCRM
         catch (Exception)
         {
             Dictionary<string, object> erro = new Dictionary<string, object>();
-            erro.Add("success", false);
+    erro.Add("success", false);
             return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
         }
     }
@@ -50,68 +50,32 @@ public class ListasController : PloomesCRM
     [ActionName("")]
     public object Delete(int id)
     {
-
         Dictionary<string, object> retorno = new Dictionary<string, object>();
-        //try
-        //{
+        try
+        {
             service.Delete(id);
             retorno.Add("success", true);
             return Request.CreateResponse(HttpStatusCode.OK, retorno);
-        //}
-        //catch (Exception)
-        //{
-        //    retorno.Add("success", false);
-        //    return Request.CreateResponse(HttpStatusCode.InternalServerError, retorno);
-        //}
+        }
+        catch (Exception)
+        {
+            retorno.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, retorno);
+        }
     }
 
-    /*  [ActionName("")]
-      public object Post(JObject cliente, string uk = null, string apvk = null)
-      {
-          try
-          {
-              return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Post(uk, apvk, cliente), ControllerContext));
-          }
-          catch (Exception)
-          {
-              Dictionary<string, object> erro = new Dictionary<string, object>();
-              erro.Add("success", false);
-              return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
-          }
-      }
-
-      [ActionName("")]
-      public object Put(int id, JObject cliente, string uk = null, string apvk = null)
-      {
-          try
-          {
-              return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Put(id, uk, apvk, cliente), ControllerContext));
-          }
-          catch (Exception)
-          {
-              Dictionary<string, object> erro = new Dictionary<string, object>();
-              erro.Add("success", false);
-              return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
-          }
-      }
-
-      [ActionName("")]
-      public object Delete(int id)
-      {
-          Dictionary<string, object> retorno = new Dictionary<string, object>();
-          try
-          {
-              string uk = GetQueryString(ControllerContext, "uk");
-              string apvk = GetQueryString(ControllerContext, "apvk");
-
-              service.Delete(id, uk, apvk);
-              retorno.Add("success", true);
-              return Request.CreateResponse(HttpStatusCode.OK, retorno);
-          }
-          catch (Exception)
-          {
-              retorno.Add("success", false);
-              return Request.CreateResponse(HttpStatusCode.InternalServerError, retorno);
-          }
-      }*/
+    [ActionName("")]
+    public object Put(JObject lista)
+    {
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Put(lista), ControllerContext));
+        }
+        catch (Exception)
+        {
+            Dictionary<string, object> erro = new Dictionary<string, object>();
+            erro.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+        }
+    }
 }

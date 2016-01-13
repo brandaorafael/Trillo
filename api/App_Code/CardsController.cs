@@ -33,18 +33,50 @@ public class CardsController: PloomesCRM
         }
     }
 
-    //[ActionName("")]
-    //public object Post(JObject card)
-    //{
-    //    try
-    //    {
-    //        return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Get(id, nome, id_lista), ControllerContext));
-    //    }
-    //    catch (Exception)
-    //    {
-    //        Dictionary<string, object> erro = new Dictionary<string, object>();
-    //        erro.Add("success", false);
-    //        return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
-    //    }
-    //}
+    [ActionName("")]
+    public object Post(JObject card)
+    {
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Post(card), ControllerContext));
+        }
+        catch (Exception)
+        {
+            Dictionary<string, object> erro = new Dictionary<string, object>();
+            erro.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+        }
+    }
+
+    [ActionName("")]
+    public object Delete(int id)
+    {
+        Dictionary<string, object> retorno = new Dictionary<string, object>();
+        try
+        {
+            service.Delete(id);
+            retorno.Add("success", true);
+            return Request.CreateResponse(HttpStatusCode.OK, retorno);
+        }
+        catch (Exception)
+        {
+            retorno.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, retorno);
+        }
+    }
+
+    [ActionName("")]
+    public object Put(JObject card)
+    {
+        try
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, SelectedFields(service.Put(card), ControllerContext));
+        }
+        catch (Exception)
+        {
+            Dictionary<string, object> erro = new Dictionary<string, object>();
+            erro.Add("success", false);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, erro);
+        }
+    }
 }

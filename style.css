@@ -50,6 +50,7 @@ li {
 	background: #FFFFFF;
 	border-radius: 3px;
 	padding: 10px;
+    height: 20px;
 }
 
 .card:hover {

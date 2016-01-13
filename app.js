@@ -1,4 +1,3 @@
-//var lostas = [{"nome": "testando1", "cards": [{"nome": "Card1", "id": "l1c1"}, {"nome": "Card2", "id": "l1c2"}]}, {"nome": "testando2", "cards": [{"nome": "Card1", "id": "l2c1"}, {"nome": "Card2", "id": "l2c2"}, {"nome": "Card3", "id": "l2c3"}, {"nome": "Card4", "id": "l2c4"}]}];
 var lostas = [
 	{"nome": "testando1",
 	"cards": [
@@ -27,29 +26,27 @@ var lostas = [
 
 	var listas = lostas;
 
-	app.directive("sortable", function(){
-		return {
-			restrict: "A",
-			link: function(){
-				
-			}
-		}
-	});
-
 	app.controller("ListaController",["$http", function($http){
+
 		var listaCtrl = this;
 
-		listaCtrl.novaLista = {"nome": "Nova Lista"}; 
+		listaCtrl.nomeEditado = "";
 
-		//listaCtrl.listas = listas;
+		listaCtrl.novaLista = {"nome": "Nova Lista", "editando": false};
+
+		listaCtrl.novoCard = {"nome": "Novo Card", "editando": false}; 
 
 		$http.get("http://localhost:60684/listas").success(function(data){
 			listaCtrl.listas = data;
+			angular.forEach(listaCtrl.listas, function(lista, key){
+				lista.editando = false;
+				angular.forEach(lista.cards, function(card, key){
+					card.editando = false;
+				});
+			});
 		});
 
 		listaCtrl.addLista = function(){
-			//listaCtrl.listas.push({"nome": "Nova Lista", "cards": []});
-			
 			$http.post("http://localhost:60684/listas", listaCtrl.novaLista).success(function(data){
 				listaCtrl.listas.push(data[0]);
 			}).error(function(){
@@ -57,11 +54,10 @@ var lostas = [
 			});
 		}
 
-		listaCtrl.removeLista = function(id){
-			
-			$http.delete("http://localhost:60684/listas/"+id).success(function(data){
+		listaCtrl.removeLista = function(lista){			
+			$http.delete("http://localhost:60684/listas/"+lista.id).success(function(data){
 
-				var index = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(id);
+				var index = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
 
 				listaCtrl.listas.splice(index, 1);
 				
@@ -70,11 +66,101 @@ var lostas = [
 			});
 		}
 
-		listaCtrl.addCard = function(listaAtual){
-			listaAtual.cards.push({"nome": "Novo Card", "id": listaAtual.cards.length + 1});
+		listaCtrl.updateLista = function(lista){
+			
+			lista.nome = listaCtrl.nomeEditado;
+
+			$http.put("http://localhost:60684/listas/"+lista.id, lista).success(function(data){
+
+				var index = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
+
+				listaCtrl.listas[index] = lista;
+				
+			}).error(function(){
+				alert("Deu Erro");
+			});
 		}
 
+		listaCtrl.addCard = function(lista){
+			listaCtrl.novoCard.id_lista = lista.id;
+
+			$http.post("http://localhost:60684/cards", listaCtrl.novoCard).success(function(data){
+				lista.cards.push(data[0]);
+			}).error(function(){
+				alert("Deu Erro");
+			});
+		}
+
+		listaCtrl.removeCard = function(card, lista){
+			$http.delete("http://localhost:60684/cards/"+card.id).success(function(data){
+
+				var indexLista = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
+				var indexCard = listaCtrl.listas[indexLista].cards.map(function(e) { return e.id; }).indexOf(card.id);
+
+				listaCtrl.listas[indexLista].cards.splice(indexCard, 1);
+				
+			}).error(function(){
+				alert("Deu Erro");
+			});
+		}
+
+		listaCtrl.updateCard = function(card, lista){
+			card.nome = listaCtrl.nomeEditado;
+
+			$http.put("http://localhost:60684/cards/"+card.id, card).success(function(data){
+
+				var indexLista = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
+				var indexCard = listaCtrl.listas[indexLista].cards.map(function(e) { return e.id; }).indexOf(card.id);
+
+				listaCtrl.listas[indexLista].cards[indexCard] = card;
+				
+			}).error(function(){
+				alert("Deu Erro");
+			});
+		}
+		
 	}]);
+
+	app.directive('focusOn',function($timeout) {
+	    return {
+	        restrict: 'A',
+	        link: function($scope, $element, $attr) {
+	            if ($attr.ngShow){
+	                $scope.$watch($attr.ngShow, function(newValue){
+	                    if(newValue){
+	                        $timeout(function(){
+	                            $element.focus();
+	                        }, 0);
+	                    }
+	                })      
+	            }
+	            if ($attr.ngHide){
+	                $scope.$watch($attr.ngHide, function(newValue){
+	                    if(!newValue){
+	                        $timeout(function(){
+	                            $element.focus();
+	                        }, 0);
+	                    }
+	                })      
+	            }
+
+	        }
+	    };
+	});
+
+	app.directive('ngEnter', function() {
+        return function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if(event.which === 13) {
+                    scope.$apply(function(){
+                        scope.$eval(attrs.ngEnter, {'event': event});
+                    });
+
+                    event.preventDefault();
+                }
+            });
+        };
+    });
 
 })();
 
@@ -116,7 +202,3 @@ $(document).ready(function() {
     });
     
 });
-
-// homes.sort(function(a, b) {
-//     return parseFloat(a.price) - parseFloat(b.price);
-// });
