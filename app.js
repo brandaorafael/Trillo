@@ -162,8 +162,8 @@
 	        scope: false,
 	        link: function($scope, element, attrs) {
 	            $(element).sortable({
-			        connectWith: ".lista",
-			        items:".card",
+			        connectWith: ".cards",
+			        items:"li:not(.placeholder)",
 			        receive: function (event, ui) {
 
 			        	var indexListaInicial = $scope.listas.map(function(e) { return e.id; }).indexOf(+ui.sender.attr("id"));
@@ -179,7 +179,7 @@
 			        	$scope.$apply();
 			       	}
 			    });
-			    
+
 	        }
 
 	    }
