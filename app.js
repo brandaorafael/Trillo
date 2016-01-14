@@ -1,32 +1,9 @@
-var lostas = [
-	{"nome": "testando1",
-	"cards": [
-			{"nome": "Card1",
-			"id": "1"},
-			{"nome": "Card2",
-			"id": "2"}
-		]
-	},
-	{"nome": "testando2",
-	"cards": [
-			{"nome": "Card1",
-			"id": "1"},
-			{"nome": "Card2",
-			"id": "2"}, 
-			{"nome": "Card3", 
-			"id": "3"}, 
-			{"nome": "Card4", 
-			"id": "4"}
-		]
-	}
-];
-
 (function(){
 	var app = angular.module("app", []);
 
-	var listas = lostas;
+	var listas = [];
 
-	app.controller("ListaController",["$http", function($http){
+	app.controller("ListaController",["$http", "$scope", function($http, $scope){
 
 		var listaCtrl = this;
 
@@ -44,6 +21,7 @@ var lostas = [
 					card.editando = false;
 				});
 			});
+			$scope.listas = listaCtrl.listas;
 		});
 
 		listaCtrl.addLista = function(){
@@ -54,7 +32,7 @@ var lostas = [
 			});
 		}
 
-		listaCtrl.removeLista = function(lista){			
+		listaCtrl.removeLista = function(lista){
 			$http.delete("http://localhost:60684/listas/"+lista.id).success(function(data){
 
 				var index = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
@@ -104,21 +82,37 @@ var lostas = [
 			});
 		}
 
-		listaCtrl.updateCard = function(card, lista){
+		listaCtrl.updateCard = function(card, listaInicial){
 			card.nome = listaCtrl.nomeEditado;
 
 			$http.put("http://localhost:60684/cards/"+card.id, card).success(function(data){
 
-				var indexLista = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(lista.id);
+				var indexLista = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(listaInicial.id);
 				var indexCard = listaCtrl.listas[indexLista].cards.map(function(e) { return e.id; }).indexOf(card.id);
 
 				listaCtrl.listas[indexLista].cards[indexCard] = card;
 				
 			}).error(function(){
 				alert("Deu Erro");
+			});	
+		}
+
+		$scope.updateCard = function(card, listaInicial, listaFinal){
+			
+			card.id_lista = listaFinal.id;
+
+			$http.put("http://localhost:60684/cards/"+card.id, card).success(function(data){
+				
+				var indexListaInicial = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(listaInicial.id);
+				var indexListaFinal = listaCtrl.listas.map(function(e) { return e.id; }).indexOf(listaFinal.id);
+				var indexCard = listaCtrl.listas[indexListaInicial].cards.map(function(e) { return e.id; }).indexOf(card.id);
+
+				listaCtrl.listas[indexListaInicial].cards.splice(indexCard, 1);
+				listaCtrl.listas[indexListaFinal].cards.push(card);
+			}).error(function(){
+				alert("Deu Erro");
 			});
 		}
-		
 	}]);
 
 	app.directive('focusOn',function($timeout) {
@@ -162,43 +156,45 @@ var lostas = [
         };
     });
 
-})();
+    app.directive('ngSortable', function($timeout) {
+	    return {
+	        restrict: 'A',
+	        scope: false,
+	        link: function($scope, element, attrs) {
+	            $(element).sortable({
+			        connectWith: ".lista",
+			        items:".card",
+			        receive: function (event, ui) {
 
-$(document).ready(function() {
+			        	var indexListaInicial = $scope.listas.map(function(e) { return e.id; }).indexOf(+ui.sender.attr("id"));
+						var indexListaFinal = $scope.listas.map(function(e) { return e.id; }).indexOf(+this.id);
+						var indexCard = $scope.listas[indexListaInicial].cards.map(function(e) { return e.id; }).indexOf(+ui.item.attr("id"));
 
-	var findCard = function(arr, cardId) {
-    	for (var i = 0, len = arr.length; i < len; i++) {
-        	if (arr[i].id === cardId)
-            	return arr[i];
-    	}
-    	return null;
-	}
+			        	var card = $scope.listas[indexListaInicial].cards[indexCard];
+			        	var listaInicial = $scope.listas[indexListaInicial];
+			        	var listaFinal = $scope.listas[indexListaFinal];
 
-	var ordenar = function(array){
+			        	$scope.updateCard(card, listaInicial, listaFinal);
+			        	
+			        	$scope.$apply();
+			       	}
+			    });
+			    
+	        }
 
-		var arr = $(this).sortable('toArray');
-		
-		for(var i = 0; i < arr.length; i++){
-			findCard(array, arr[i]).id = i + 1;
+	    }
+	});
+
+	app.directive('ngSubmitable', function($timeout) {
+	    return {
+	        restrict: 'A',
+	        scope: false,
+	        link: function($scope, element, attrs) {
+				$(element).on('change', function() {
+				    $(this).submit(); 
+				 });
+			}
 		}
-	};
+	});
 
-    $(".lista").sortable({
-        connectWith: ".lista",
-        items:".card",
-        // update: function (event, ui) {
-        // 	if(ui.sender === null){
-        // 		console.log($(this));
-        // 		console.log(event);
-        // 		console.log(ui.sender);
-        // 	}
-        // },
-        receive: function (event, ui) {
-        	console.log(ui.item.data);
-        },
-        remove: function (event, ui) {
-        	console.log(event);
-        }
-    });
-    
-});
+})();

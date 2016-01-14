@@ -8,24 +8,25 @@
 	
 	<body ng-app="app" valign="top" ng-controller="ListaController as listaCtrl">
 
-		<ul class="lista ng-scope ui-sortable" ng-repeat="lista in listaCtrl.listas">
+		<ul class="lista" ng-repeat="lista in listaCtrl.listas" ng-sortable id="{{lista.id}}">
 			<li class="nome-lista" >
 				<span class="div-nome" ng-hide="lista.editando" default-action="listaCtrl.updateLista(lista)" ng-click="lista.editando = true; listaCtrl.nomeEditado = lista.nome">{{lista.nome}}</span>
 				<input class="div-nome" ng-show="lista.editando" type="text" value="{{lista.nome}}" ng-blur="lista.editando = false" focus-on ng-enter="listaCtrl.updateLista(lista); lista.editando = false" ng-model="listaCtrl.nomeEditado">
 				<a class="div-icon" ng-click="listaCtrl.removeLista(lista)" href="#"></a>
 			</li>
 			
-			<li class="card" ng-repeat="card in lista.cards">
+			<li class="card" ng-repeat="card in lista.cards" id="{{card.id}}">
 				<span class="div-nome" ng-hide="card.editando" default-action="listaCtrl.updateCard(card, lista)" ng-click="card.editando = true; listaCtrl.nomeEditado = card.nome">{{card.nome}}</span>
 				<input class="div-nome" ng-show="card.editando" type="text" value="{{card.nome}}" ng-blur="card.editando = false" focus-on ng-enter="listaCtrl.updateCard(card, lista); card.editando = false" ng-model="listaCtrl.nomeEditado">
+				<input class="cor" type="color" ng-model="card.cor" value="card.cor" ng-submit="listaCtrl.nomeEditado = card.nome; listaCtrl.updateCard(card, lista)" ng-submitable>
 				<a class="div-icon" ng-click="listaCtrl.removeCard(card, lista)" href="#"></a>
 			</li>
 
-			<li class="add-card" ng-click="listaCtrl.addCard(lista)">Adicionar um cartão...</li>
+			<li class="add-card" ng-click="listaCtrl.addCard(lista)" href="#">Adicionar um cartão...</li>
 		</ul>
 
 		<ul class="add-lista">
-			<li ng-click="listaCtrl.addLista()">Adicionar uma lista...</li>
+			<li ng-click="listaCtrl.addLista()" href="#">Adicionar uma lista...</li>
 		</ul>
 
 	</body>

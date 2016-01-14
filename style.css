@@ -39,6 +39,14 @@ li {
 	content: url(x_icon.png);
 }
 
+.cor{
+    position: absolute;
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	right: 25px;
+}
+
 .div-nome{
 	display: inline-block;
     position: absolute;
@@ -74,6 +82,10 @@ li {
 	border-radius: 3px;	
 	color: #A9CDE2;
 	margin-top: 5px;
+}
+
+.add-lista, .add-card {
+	cursor: pointer;
 }
 
 .add-lista:hover {

@@ -50,6 +50,7 @@ public class CardsService: ApiService
         parametros.Add("id", ToDBNull(card, "id"));
         parametros.Add("nome", ToDBNull(card, "nome"));
         parametros.Add("id_lista", ToDBNull(card, "id_lista"));
+        parametros.Add("cor", ToDBNull(card, "cor"));
 
         List<Dictionary<string, object>> id = DBQuery("Card_Update", parametros, CommandType.StoredProcedure);
 
