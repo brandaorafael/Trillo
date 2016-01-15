@@ -18,23 +18,20 @@
 			<ul class="cards" ng-sortable id="{{lista.id}}">
 			
 				<li class="card" ng-repeat="card in lista.cards" id="{{card.id}}">
+					
+					<a class="modalButton" ng-href="#id{{card.id}}"></a>
 					<span class="div-nome" ng-hide="card.editando" default-action="listaCtrl.updateCard(card, lista)" ng-click="card.editando = true; listaCtrl.nomeEditado = card.nome">{{card.nome}}</span>
 					<input class="div-nome" ng-show="card.editando" type="text" value="{{card.nome}}" ng-blur="card.editando = false" focus-on ng-enter="listaCtrl.updateCard(card, lista); card.editando = false" ng-model="listaCtrl.nomeEditado">
 					<input class="cor" type="color" ng-model="card.cor" value="card.cor" ng-submit="listaCtrl.nomeEditado = card.nome; listaCtrl.updateCard(card, lista)" ng-submitable>
 					<a class="div-icon" ng-click="listaCtrl.removeCard(card, lista)" href="#"></a>
 
-					<!--<div class="modal-content">
-						<div class="modal-header">
-					    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-					        <h4 class="modal-title">{{card.nome}}</h4>
-					    </div>
-					    <div class="modal-body">
-					    	<p>{{lista.nome}}</p>
-					    </div>
-					    <div class="modal-footer">
-					    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<div id="id{{card.id}}" class="modalDialog">
+						<div>
+							<a href="#close" title="Close" class="close">X</a>
+							<h2>{{card.id}}</h2>
 						</div>
-				    </div>-->
+					</div>
+
 				</li>
 
 			</ul>	
